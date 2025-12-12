@@ -1,0 +1,12 @@
+Encapsulation:
+- Core state lives in private properties across the codebase: the Game class hides $player1, $player2, $currentState, $currentPlayer, and $message while persisting them safely via saveToSession(). Player keeps $board and $shipsPlaced private, exposing only getters/setters (e.g., setShipsPlaced()). Board and Cell also keep grid/cell details private so no outside code can mutate positions directly; attacks flow through Game->attack() → Player->receiveAttack() → Board->receiveAttack() → Cell->attack().
+
+Inheritance:
+- All concrete ships (Carrier, Battleship, Cruiser, Submarine, Destroyer) extend the abstract Ship class in ships/*.php. Ship defines shared properties ($name, $size, $hits) and the abstract getType(), which each child overrides to report its type. This hierarchy lets the game treat every vessel uniformly while still distinguishing behavior and metadata per class.
+
+Polymorphism:
+- Ship subclasses override getType(), and Ship::hit()/isSunk() operate polymorphically on any ship instance. Cell::attack() can call $this->ship->hit() without caring about the concrete type. Board::placeShip() and Board::allShipsSunk() iterate over Ship instances generically, while Player::createShip() switches types to build the appropriate subclass. Game::attack() and Player::receiveAttack() rely on these shared interfaces so the same flow works for every ship kind.
+
+Abstraction:
+- High-level orchestration sits in Game: placeShip(), confirmPlacement(), attack(), reset(), and getCurrentState() form a simple API that hides session handling and turn-order rules. Board::placeShip(), Board::receiveAttack(), and Board::isValidPosition() wrap the low-level grid math. config.php further abstracts bootstrapping with constants for states/ship sizes plus an autoloader that wires Game, Player, Board, Cell, and ships together without manual includes scattered throughout the code.
+

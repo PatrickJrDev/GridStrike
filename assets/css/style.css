@@ -1,0 +1,688 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --success-color: #27a5ae;
+    --warning-color: #f39c12;
+    --background-color: #ecf0f1;
+    --text-color: #2c3e50;
+    --border-color: #bdc3c7;
+    --panel-bg: #ffffff;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+     padding: 10px;
+    content: "";
+        position: fixed; 
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1; 
+        
+        background-image: url('../svg/bg.png');
+        background-size: cover;
+       
+        background-repeat: no-repeat;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* --- MAIN CONTAINER --- */
+.container {
+    max-width: 60vw; 
+    margin: 0 auto;
+    background: var(--panel-bg);
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 95vh; 
+}
+
+/* === NEW: Battle Mode Width Override === */
+/* This makes the container wider only during battle */
+.container.pvp-mode {
+    max-width: 70vw; 
+    width: 70vw;
+}
+
+/* Header Styles */
+header {
+    background: var(--primary-color);
+    color: white;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid var(--secondary-color);
+}
+
+h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #71bbed, #08607e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.game-info {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+#gameMessage {
+    font-size: 1.1rem;
+    font-weight: 600;
+    background: rgba(255,255,255,0.1);
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.btn {
+    background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Adjust main content layout after removing panels */
+.main-content {
+    display: flex;
+    flex: 1;
+    gap: 20px;
+    padding: 25px;
+    background: var(--background-color);
+}
+/* Interface Panels */
+.interface-panel {
+    background: var(--panel-bg);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    border: 1px solid var(--border-color);
+}
+
+.interface-main {
+    flex: 1; /* Take full width when side panel is minimal */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.interface-side {
+    flex: 0.4; /* Reduced width since we only have combat log */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Setup Phase Wrapper - Ensures the panels fit the container height */
+.setup-content {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 30px;
+    height: 100%;     
+    overflow: hidden; 
+}
+
+/* Fleet Command Panel */
+.ship-selector {
+    background: var(--panel-bg);
+    padding: 15px; 
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    
+    display: flex;
+    flex-direction: column;
+    height: 100%; 
+    overflow: hidden; 
+}
+
+/* The list of ships */
+.ship-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin: 10px 0;
+    flex: 1;          
+    overflow-y: auto; 
+    padding-right: 5px; 
+}
+
+/* Individual Ship Buttons */
+.ship-item {
+    background: white;
+    padding: 10px; 
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid #2c3e50;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    flex-shrink: 0; 
+}
+
+/* Rest of ship item styles */
+.ship-item::before {
+    content: "⚓";
+    font-size: 1rem;
+}
+
+.ship-item.selected {
+    border-color: var(--success-color);
+    background: #d5f4e6;
+    transform: translateX(5px);
+}
+
+.ship-item.placed {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #ecf0f1;
+}
+
+.orientation {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 4px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.orientation label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 3px;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.orientation label:hover {
+    background: #e9ecef;
+}
+
+/* Board Styles */
+.board-container {
+    background: var(--panel-bg);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.board-container h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    font-size: 1.3rem;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 3px;
+    background: #34495e;
+    padding: 6px;
+    border-radius: 8px;
+    border: 3px solid #2c3e50;
+    margin: 0 auto;
+    max-width: 1000px;
+}
+
+.cell {
+    aspect-ratio: 1;
+    background: #3498db;
+    border: 1px solid rgba(255,255,255,0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.cell:hover {
+    background: #5dade2;
+    transform: scale(1.05);
+}
+
+.cell.ship {
+    background: #7f8c8d;
+    border-color: #95a5a6;
+}
+
+.cell.hit {
+    background: #e74c3c !important;
+    color: white;
+    border-color: #c0392b;
+    position: relative;
+}
+
+.cell.hit::after {
+    content: "💥";
+}
+
+.cell.miss {
+    background: #95a5a6 !important;
+    color: white;
+    border-color: #7f8c8d;
+}
+
+.cell.miss::after {
+    content: "○";
+    color: white;
+}
+
+.cell.attackable {
+    border: 2px solid var(--accent-color) !important;
+    background: #3498db !important;
+    cursor: crosshair;
+}
+
+.cell.attackable:hover {
+    background: #5dade2 !important;
+    transform: scale(1.08);
+    box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+}
+
+/* --- BATTLE PHASE (PvP) RESIZING --- */
+
+.battle-container {
+    display: flex;
+    flex-direction: column;
+    /* Controls spacing between the Top Banner and the Grids */
+    gap: 10px; 
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    /* Adds a safety cushion at the very bottom of the screen */
+    padding-bottom: 10px; 
+}
+
+.player-grids {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 20px;
+    align-items: center;
+    justify-items: center;
+    flex: 1;
+    /* CRITICAL: Allows the layout to shrink vertically if needed */
+    min-height: 0; 
+    overflow: hidden;
+    padding: 5px;
+}
+
+/* TURN INDICATOR (Top Banner) */
+/* Container for the Top Area */
+.turn-indicator {
+    /* Layout */
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center;
+    
+    /* Lock the Size */
+    width: auto; 
+    min-width: 300px; 
+    margin: 0 20px;   
+    height: 110px;    
+    min-height: 110px; 
+    
+    /* Styling */
+    padding: 10px;
+    background: var(--panel-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border: 3px solid var(--primary-color);
+    flex-shrink: 0;
+}
+
+/* 1. The Image Banner Container */
+.vs-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px; 
+    margin-bottom: 5px;
+}
+
+/* 2. Style for the Images */
+.banner-img {
+    height: 150px; 
+    width: auto;  
+    object-fit: contain;
+}
+
+.vs-img {
+    height: 70px; 
+}
+
+/* 3. The Text Wrapper */
+.turn-text-wrapper {
+    text-align: center;
+}
+
+/* 4. The Text Styling (Made Smaller) */
+.turn-indicator h2 {
+    color: var(--primary-color);
+    margin: 0;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.turn-indicator p {
+    color: var(--text-color);
+    margin: 0;
+    font-size: 0.85rem; 
+}
+
+/* PLAYER LABEL AREAS */
+.player-area {
+    background: var(--panel-bg);
+    padding: 8px; 
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-height: 100%; 
+    overflow: hidden;
+}
+
+.player-area h3 {
+    margin-bottom: 10px;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    padding-bottom: 5px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+/* === CRITICAL FIX: BOARD SIZING IN BATTLE === */
+/* This forces the boards to stay small enough to fit side-by-side */
+.player-grids .board {
+    width: 100%;
+    max-width: 320px; 
+    aspect-ratio: 1 / 1;
+    height: auto;
+    padding: 5px;
+    
+    align-self: center;
+    justify-self: center;
+}
+
+@media (max-width: 1000px) {
+    .container.pvp-mode {
+        max-width: 95vw;
+        width: 95vw;
+    }
+    .player-grids .board {
+        max-width: 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    
+    .player-area {
+        padding: 15px;
+    }
+    
+    .turn-indicator {
+        padding: 15px;
+    }
+    
+    .turn-indicator h2 {
+        font-size: 1.5rem;
+    }
+}
+
+.game-over {
+    text-align: center;
+    padding: 60px 40px;
+    background: linear-gradient(180deg, #00c3ff 0%, #0c0068 100%);
+    color: white;
+    border-radius: 15px;
+    margin: 20px;
+}
+
+.game-over h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: white;
+    -webkit-text-fill-color: white;
+    background: none;
+}
+
+.game-over h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+.ship-status-item.sunk {
+    border-left-color: var(--accent-color);
+    background: #ffeaea;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {    
+    .main-content {
+        flex-direction: column;
+    }
+    
+    .setup-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .game-info {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .board {
+        max-width: 100%;
+    }
+    
+    .cell {
+        font-size: 0.8rem;
+    }
+}
+
+
+@keyframes hitAnimation {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.cell.hit {
+    animation: hitAnimation 0.3s ease;
+}
+
+
+/* Game Over Phase */
+#gameOverPhase {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.game-over {
+    text-align: center;
+    padding: 60px 40px;
+    background: linear-gradient(180deg, #00c3ff 0%, #0c0068 100%);
+    color: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    max-width: 500px;
+    width: 90%;
+    border: 3px solid var(--primary-color);
+}
+
+.game-over h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.game-over h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    opacity: 0.9;
+    color: gold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+#playAgainBtn {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    font-size: 1.2rem;
+    padding: 15px 30px;
+    margin-top: 20px;
+}
+
+#playAgainBtn:hover {
+    background: linear-gradient(135deg, #229954, #27ae60);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
+}
+
+/* Intro / audio SPA shell */
+.audio-shell {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1100;
+}
+
+.mute-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.mute-button img{
+    width: clamp(40px, 8vw, 120px);
+    height: auto;
+    filter: drop-shadow(3px 3px rgb(0, 0, 0)) ;
+    border-radius: 50px;
+}
+
+.intro-screen {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.intro-content {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.intro-logo {
+    max-width: 60%;
+    height: auto;
+}
+
+.playButton {
+    background: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.playButton img {
+    width: clamp(150px, 20vw, 250px);
+    height: auto;
+}
+
+.playButton:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0px 0px 10px rgb(56, 149, 255));
+}
+
+.quitCommand {
+    font-family: "Silkscreen", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: clamp(1.5rem, 5vw, 2.7rem);
+    text-shadow: 4px 4px 3px #b0d5ff;
+}
+
+#battlePhase {
+    display: none;
+}
+
