@@ -40,10 +40,10 @@
 - Audio note: Background music (`assets/bgm/GridStrike.mp3`) autoplays muted—toggle with the speaker button.
 
 ## Video Demonstration Links
-- Patrick Briane A. San Jose Jr.: _link pending_
-- Christopher V. Lazatin: _link pending_
-- Kenneth S. Cruz: _link pending_
-- Ezekiel "CJ" G. Estrellado: _link pending_
-- Aaron Kerbie M. Malaon: _link pending_
-- Mark Joseph T. Ardenio: _link pending_
+- Patrick Briane A. San Jose Jr.: https://drive.google.com/drive/folders/19uqH-2INdqbXxlW-OoQVwZD3SOMICz-k?usp=sharing
+- Christopher V. Lazatin: https://drive.google.com/drive/folders/151UP8m1P045joJHkQKODpKGyzQYi7kA9?usp=drive_link
+- Kenneth S. Cruz: https://drive.google.com/drive/folders/1GFKIMV5wNyY2Nof0EGwT106rG1JPQ-mN?usp=sharing
+- Ezekiel "CJ" G. Estrellado: https://drive.google.com/drive/folders/1azjKl3DYbnTrunKaCfnbiQj5KdcXCrc2?usp=sharing
+- Aaron Kerbie M. Malaon: https://drive.google.com/drive/folders/10HHkPvHvgSKMdoeSgKHLR5tLiWYuN3qg?usp=sharing
+- Mark Joseph T. Ardenio: https://drive.google.com/drive/folders/1mjsxLpkzzwzLqgX4K7EwAf-kU9Qje6B0?usp=sharing
 
